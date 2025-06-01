@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRS</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', Arial, sans-serif; /* Enhanced font */
+      padding: 20px;
+      margin: 0;
+      background: linear-gradient(to bottom right, #81D4FA, #FFCC80); /* Brighter, more colorful background */
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #1a237e; /* Deeper color for heading */
+      margin-bottom: 30px;
+      font-size: 2.5rem; /* Larger heading */
+    }
+    form {
+      background-color: #ffffff;
+      padding: 30px; /* More padding */
+      border-radius: 12px; /* Slightly more rounded corners */
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* More pronounced shadow */
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    label {
+      display: block;
+      margin-top: 15px; /* More space */
+      color: #424242; /* Slightly darker label color */
+      font-weight: bold; /* Make labels bold */
+    }
+    /* --- NEW: Styling for specific labels in red --- */
+    label[for="name"],
+    label[for="email"],
+    label[for="contact"],
+    label[for="qualification"],
+    label[for="branch"],
+    label[for="majors"],
+    label[for="skills"],
+    label[for="background"] {
+        color: #FF0000; /* Red color */
+    }
+    /* --- END NEW STYLING --- */
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px; /* More padding */
+      margin-top: 8px; /* More space */
+      margin-bottom: 20px; /* More space */
+      border: 1px solid #bdbdbd; /* Softer border color */
+      border-radius: 8px; /* Slightly more rounded */
+      font-size: 1.05rem; /* Slightly larger font */
+      font-family: 'Roboto', Arial, sans-serif;
+    }
+    textarea {
+        resize: vertical; /* Allow vertical resizing */
+    }
+    button {
+      background-color: #ffb300; /* A warmer, more inviting yellow */
+      color: #1a237e; /* Dark blue text for contrast */
+      padding: 14px 28px; /* More padding */
+      border: none;
+      border-radius: 8px; /* Slightly more rounded */
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.1rem; /* Slightly larger font */
+      transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover */
+      width: auto; /* Allow button to size based on content */
+      margin-right: 10px; /* Space between buttons if multiple */
+    }
+    button:hover {
+      background-color: #ffc107; /* Lighter yellow on hover */
+      transform: translateY(-2px); /* Slight lift effect */
+    }
+    button[type="button"] { /* Style for the reset button */
+        background-color: #9e9e9e;
+        color: #ffffff;
+    }
+    button[type="button"]:hover {
+        background-color: #b0b0b0;
+        transform: translateY(-2px);
+    }
+    .result {
+      margin-top: 40px; /* More space */
+      padding: 25px; /* More padding */
+      background-color: #e3f2fd; /* Softer blue for result */
+      border: 2px solid #90caf9; /* Matching border color */
+      border-radius: 12px; /* Rounded corners */
+      max-width: 700px;
+      margin: 40px auto 0;
+      color: #1a237e; /* Darker text for results */
+      line-height: 1.6; /* Better readability */
+    }
+    .result h2 {
+        color: #1a237e;
+        margin-top: 0;
+        font-size: 1.8rem;
+    }
+    .result ul {
+        list-style-type: disc; /* Default disc bullets */
+        padding-left: 25px; /* Indent list items */
+    }
+    .result li {
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+    }
+    /* --- NEW: Styling for skill suggestions in brown --- */
+    #skillSuggestions {
+        color: #A52A2A; /* Brown color */
+        font-style: italic;
+        font-size: 0.9em;
+    }
+    /* --- END NEW STYLING --- */
+
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      form, .result {
+        padding: 15px;
+      }
+      h1 {
+        font-size: 2rem; /* Adjusted for mobile */
+      }
+      button {
+          width: 100%; /* Full width buttons on small screens */
+          margin-bottom: 10px;
+          margin-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h1 style="
+          display: inline-block;
+          border: 5px solid #4f21c4; 
+          padding: 10px 20px; 
+          border-radius: 40px; 
+          background-color: #e1e90e; 
+          background-image: linear-gradient(to right, #054109, #4f21c4); 
+          -webkit-background-clip: text; 
+          -webkit-text-fill-color: transparent;
+          font-weight: bold;
+        ">
+          Course Recommendation Specification
+        </h1>
+      </div>
+    <p style="text-align: center; color: #424242; font-size: 1.1rem;"></p>      
+
+  
+  <form id="courseForm">
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" required />
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" required />
+
+    <label for="contact">Contact (Phone No.):</label>
+    <input type="tel" id="contact" pattern="[0-9]{10}" placeholder="e.g., 9876543210" required />
+
+    <label for="qualification">Highest Qualification:</label>
+    <select id="qualification" required>
+      <option value="">Select</option>
+      <option value="BCA">BCA</option>
+      <option value="BBA">BBA</option>
+      <option value="MBA">MBA</option>
+      <option value="B.Tech">B.Tech</option>
+      <option value="M.Tech">M.Tech</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="branch">Branch:</label>
+    <select id="branch" required>
+        <option value="">Select Branch</option>
+        <option value="IT">IT</option>
+        <option value="Management">Management</option>
+        <option value="Literature">Literature</option>
+        <option value="Science">Science</option>
+        <option value="OtherBranch">Other</option>
+    </select>
+
+    <label for="majors">Majors:</label>
+    <select id="majors" required disabled>
+        <option value="">Select Major</option>
+    </select>
+
+    <label for="skills">Skills or Interests:</label>
+    <input type="text" id="skills" placeholder="e.g., programming, marketing, finance" />
+    <small id="skillSuggestions" style="display: block; color: #555; margin-top: -15px; margin-bottom: 15px;">Suggested: </small>
+
+
+    <label for="background">Background Information:</label>
+    <textarea id="background" rows="4" placeholder="Brief about your background or career goals..."></textarea>
+
+    <button type="submit">Get Recommendation</button>
+  </form>
+
+  <div id="recommendation" class="result" style="display: none;"></div>
+
+  <script>
+    const form = document.getElementById("courseForm");
+    const resultDiv = document.getElementById("recommendation");
+    const branchSelect = document.getElementById("branch");
+    const majorsSelect = document.getElementById("majors");
+    const skillsInput = document.getElementById("skills");
+    const skillSuggestionsDiv = document.getElementById("skillSuggestions");
+
+
+    // Initial recommendations based on qualification
+    const baseRecommendations = {
+      BCA: [
+        "MCA", "Cyber Security Fundamentals", "Data Science Introduction", "Web Development Basics",
+        "Mobile App Development (Android/iOS)", "Software Development Lifecycle", "Digital Marketing Strategy",
+        "Blockchain Technology Overview", "Product Management Essentials"
+      ],
+      BBA: [
+        "MBA Prep Courses", "Business Analytics Fundamentals", "Digital Marketing Campaigns",
+        "Financial Analyst Certification Prep", "Investment Banking Principles",
+        "HR Management & Employee Relations", "Entrepreneurship & Startup Management",
+        "Data Analysis with Excel", "Project Management Certification (e.g., CAPM)"
+      ],
+      MBA: [
+        "PhD in Management Studies", "Advanced Business Analytics", "Certified Management Accountant (CMA)",
+        "SAP ERP Training", "Project Management Professional (PMP)", "CISA Certification Prep",
+        "Strategic Marketing Diploma", "Financial Risk Manager (FRM)",
+        "Chartered Financial Analyst (CFA) Level I"
+      ],
+      "B.Tech": [
+        "M.Tech Admission Prep", "Machine Learning & AI Principles", "Cloud Computing Architectures",
+        "DevOps Practices", "Internet of Things (IoT) Development", "UI/UX Design for Engineers",
+        "Blockchain for Developers"
+      ],
+      "M.Tech": [
+        "PhD in Engineering/Technology", "Advanced Research Methodologies", "Specialized Data Science Tracks",
+        "AI Specialization (e.g., NLP, Computer Vision)", "Cloud Architecture & Security",
+        "Advanced Cyber Security Threats", "Technical Project Management Leadership"
+      ],
+      Other: [
+        "General Certification Courses", "Basic Programming Concepts", "Technical Writing Skills",
+        "Foundations of Digital Marketing", "Business Communication & Etiquette"
+      ]
+    };
+
+    // Majors by Branch for dynamic dropdown
+    const majorsByBranch = {
+        IT: ["Computer Science (CS)", "Computer Science Engineering (CSE)", "Information Technology Systems",
+             "Software Engineering", "Cyber Security", "Data Science", "Artificial Intelligence", "Networking"],
+        Management: ["Finance", "Marketing", "Human Resources", "Operations Management",
+                     "Business Analytics", "International Business", "Entrepreneurship"],
+        Literature: ["English Literature", "Comparative Literature", "Creative Writing", "Linguistics", "Journalism"],
+        Science: ["Botany", "Zoology", "Physics", "Chemistry", "Mathematics", "Biotechnology", "Microbiology"],
+        OtherBranch: ["Other"]
+    };
+
+    // Specific recommendations based on Branch and Major
+    const specificRecommendations = {
+        IT: {
+            "Computer Science (CS)": ["Advanced Algorithms & Data Structures", "Compiler Design", "Operating Systems Internals"],
+            "Computer Science Engineering (CSE)": ["Embedded Systems Design", "VLSI Design", "Robotics"],
+            "Information Technology Systems": ["IT Service Management (ITSM)", "Cloud Governance", "Enterprise Architecture"],
+            "Software Engineering": ["Software Architecture Patterns", "Agile & Scrum Master", "DevSecOps"],
+            "Cyber Security": ["Ethical Hacking & Penetration Testing", "Digital Forensics", "Security Operations Center (SOC) Analyst"],
+            "Data Science": ["Machine Learning Engineering", "Deep Learning Frameworks", "Big Data Analytics with Spark"],
+            "Artificial Intelligence": ["Natural Language Processing (NLP)", "Computer Vision", "Reinforcement Learning"],
+            "Networking": ["CCNA/CCNP Certification", "Network Security Engineering", "Cloud Networking"]
+        },
+        Management: {
+            "Finance": ["Corporate Finance & Valuation", "Financial Modeling", "Investment Analysis & Portfolio Management", "FinTech Innovations"],
+            "Marketing": ["Digital Marketing Analytics", "Brand Management & Strategy", "Consumer Insights", "Product Marketing"],
+            "Human Resources": ["Talent Management & Acquisition", "HR Analytics", "Compensation & Benefits", "Organizational Development"],
+            "Operations Management": ["Supply Chain Optimization", "Lean Six Sigma", "Logistics & Inventory Management"],
+            "Business Analytics": ["Advanced Excel for Business", "Tableau/Power BI for Data Visualization", "R/Python for Business Analysis"],
+            "International Business": ["Global Market Entry Strategies", "Cross-Cultural Management", "International Trade Law"],
+            "Entrepreneurship": ["Startup Funding & Pitching", "Business Model Innovation", "Venture Capital & Angel Investing"]
+        },
+        Literature: {
+            "English Literature": ["Literary Theory & Criticism", "Shakespearean Studies", "Postcolonial Literature"],
+            "Comparative Literature": ["World Literature", "Translation Studies"],
+            "Creative Writing": ["Fiction Writing Workshop", "Poetry Workshop", "Screenwriting"],
+            "Linguistics": ["Computational Linguistics", "Phonetics & Phonology"],
+            "Journalism": ["Investigative Journalism", "Digital Storytelling", "Media Ethics"]
+        },
+        Science: {
+            "Botany": ["Plant Biotechnology & Genetic Engineering", "Ethnobotany", "Plant Pathology", "Mycology"],
+            "Zoology": ["Wildlife Conservation & Management", "Animal Physiology & Endocrinology", "Evolutionary Biology", "Parasitology"],
+            "Physics": ["Quantum Mechanics", "Astrophysics", "Solid State Physics"],
+            "Chemistry": ["Organic Synthesis", "Analytical Chemistry", "Materials Science"],
+            "Mathematics": ["Advanced Calculus", "Linear Algebra for Data Science", "Mathematical Modeling"],
+            "Biotechnology": ["Genetic Engineering", "Immunology", "Bioinformatics"],
+            "Microbiology": ["Medical Microbiology", "Environmental Microbiology", "Virology"]
+        },
+        OtherBranch: {
+            "Other": ["General Skill Development", "Career Guidance Workshop"]
+        }
+    };
+
+    // --- NEW: Suggested Skills Keywords based on Major ---
+    const suggestedSkillsByMajor = {
+        // IT Majors
+        "Computer Science (CS)": "programming, algorithms, data structures, problem solving, logic, software development, AI, machine learning",
+        "Computer Science Engineering (CSE)": "programming, embedded systems, hardware, robotics, software development, AI, machine learning",
+        "Information Technology Systems": "networking, cybersecurity, cloud computing, system administration, IT support, project management",
+        "Software Engineering": "software development, coding, agile, devops, testing, software architecture, UI/UX",
+        "Cyber Security": "cybersecurity, ethical hacking, network security, digital forensics, threat analysis",
+        "Data Science": "data analysis, machine learning, statistics, python, R, big data, data visualization",
+        "Artificial Intelligence": "AI, machine learning, deep learning, NLP, computer vision, neural networks",
+        "Networking": "networking, network security, Cisco, routing, switching, cloud networking",
+
+        // Management Majors
+        "Finance": "finance, accounting, investment, financial analysis, banking, stock market, fintech",
+        "Marketing": "marketing, digital marketing, social media, branding, market research, advertising, content creation",
+        "Human Resources": "human resources, HR, recruitment, talent management, employee relations, training, organizational development",
+        "Operations Management": "operations, supply chain, logistics, process improvement, quality control, lean, Six Sigma",
+        "Business Analytics": "business analytics, data analysis, Excel, SQL, statistics, business intelligence, dashboarding",
+        "International Business": "international trade, global markets, cross-cultural communication, foreign policy, import/export",
+        "Entrepreneurship": "entrepreneurship, startup, business plan, innovation, venture capital, fundraising, leadership",
+
+        // Literature Majors
+        "English Literature": "literary analysis, critical thinking, writing, research, storytelling, poetry, drama",
+        "Comparative Literature": "comparative analysis, cultural studies, translation, critical theory, world literature",
+        "Creative Writing": "creative writing, fiction, poetry, screenwriting, editing, storytelling, narrative",
+        "Linguistics": "linguistics, language analysis, phonetics, grammar, semantics, syntax, computational linguistics",
+        "Journalism": "journalism, reporting, writing, interviewing, media, digital storytelling, ethics",
+
+        // Science Majors
+        "Botany": "plant biology, ecology, genetics, horticulture, agriculture, research, laboratory skills, conservation",
+        "Zoology": "animal behavior, wildlife conservation, ecology, genetics, physiology, research, field work, biodiversity",
+        "Physics": "physics, research, problem solving, mathematics, data analysis, experimental design",
+        "Chemistry": "chemistry, laboratory skills, organic chemistry, analytical chemistry, research, problem solving",
+        "Mathematics": "mathematics, problem solving, logic, statistics, modeling, abstract thinking",
+        "Biotechnology": "biotechnology, genetics, molecular biology, laboratory skills, research, bioinformatics",
+        "Microbiology": "microbiology, bacteriology, virology, immunology, laboratory skills, research",
+
+        "Other": "general interest, career exploration, skill development" // Default for 'Other' branch/major
+    };
+    // --- END NEW SUGGESTED SKILLS ---
+
+
+    // Event listener for Branch dropdown to populate Majors
+    branchSelect.addEventListener("change", function() {
+        const selectedBranch = this.value;
+        majorsSelect.innerHTML = '<option value="">Select Major</option>'; // Clear previous options
+        majorsSelect.disabled = true; // Disable until options are loaded
+        skillsInput.value = ''; // Clear skills input when branch changes
+        skillsInput.placeholder = 'e.g., programming, marketing, finance'; // Reset placeholder
+        skillSuggestionsDiv.textContent = 'Suggested: '; // Clear suggestions
+
+        if (selectedBranch) {
+            const majors = majorsByBranch[selectedBranch];
+            if (majors) {
+                majors.forEach(major => {
+                    const option = document.createElement("option");
+                    option.value = major;
+                    option.textContent = major;
+                    majorsSelect.appendChild(option);
+                });
+                majorsSelect.disabled = false;
+            }
+        }
+    });
+
+    // --- NEW: Event listener for Majors dropdown to suggest skills ---
+    majorsSelect.addEventListener("change", function() {
+        const selectedMajor = this.value;
+        if (selectedMajor && suggestedSkillsByMajor[selectedMajor]) {
+            skillSuggestionsDiv.textContent = 'Suggested: ' + suggestedSkillsByMajor[selectedMajor];
+            // Optionally, you can also pre-fill the input field:
+            // skillsInput.value = suggestedSkillsByMajor[selectedMajor];
+        } else {
+            skillSuggestionsDiv.textContent = 'Suggested: '; // Clear if no suggestions
+        }
+    });
+    // --- END NEW EVENT LISTENER ---
+
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const qualification = document.getElementById("qualification").value;
+      const skills = document.getElementById("skills").value.toLowerCase();
+      const branch = document.getElementById("branch").value;
+      const majors = document.getElementById("majors").value;
+      const contact = document.getElementById("contact").value;
+
+
+      let output = `<h2>Hi ${name}, based on your inputs, here are some recommended courses:</h2>`;
+      output += `<p><strong>Contact:</strong> ${contact}</p>`;
+      output += `<p><strong>Branch:</strong> ${branch}</p>`;
+      output += `<p><strong>Major:</strong> ${majors}</p><ul>`;
+
+      // Start with qualification-based recommendations
+      let recommendedCourses = new Set(baseRecommendations[qualification] || []);
+
+      // Add courses based on specific skills keywords from user input
+      // This part processes the user's *typed* skills.
+      const skillKeywords = skills.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      skillKeywords.forEach(keyword => {
+          if (keyword.includes("programming") || keyword.includes("coding") || keyword.includes("software dev")) {
+              recommendedCourses.add("Python for Data Science");
+              recommendedCourses.add("JavaScript Web Development");
+              recommendedCourses.add("C++ for Competitive Programming");
+          }
+          if (keyword.includes("marketing") || keyword.includes("advertising")) {
+              recommendedCourses.add("Advanced Digital Marketing Strategy");
+              recommendedCourses.add("Social Media Marketing Certification");
+              recommendedCourses.add("SEO & SEM Masterclass");
+          }
+          if (keyword.includes("finance") || keyword.includes("investment") || keyword.includes("banking")) {
+              recommendedCourses.add("Financial Risk Management Techniques");
+              recommendedCourses.add("Investment Portfolio Management");
+              recommendedCourses.add("Financial Planning & Wealth Management");
+          }
+          if (keyword.includes("cybersecurity") || keyword.includes("security")) {
+              recommendedCourses.add("Ethical Hacking & Penetration Testing");
+              recommendedCourses.add("Network Security Fundamentals");
+              recommendedCourses.add("Cloud Security Best Practices");
+          }
+          if (keyword.includes("data science") || keyword.includes("analytics") || keyword.includes("big data")) {
+              recommendedCourses.add("Big Data Technologies (Hadoop, Spark)");
+              recommendedCourses.add("Machine Learning with Python");
+              recommendedCourses.add("Data Visualization with Tableau/Power BI");
+          }
+          if (keyword.includes("ai") || keyword.includes("artificial intelligence") || keyword.includes("deep learning")) {
+              recommendedCourses.add("Deep Learning Specialization");
+              recommendedCourses.add("Natural Language Processing (NLP)");
+              recommendedCourses.add("Computer Vision Applications");
+          }
+          if (keyword.includes("web development") || keyword.includes("frontend") || keyword.includes("backend") || keyword.includes("web dev")) {
+              recommendedCourses.add("React.js/Angular/Vue.js Frameworks");
+              recommendedCourses.add("Node.js & Express.js Development");
+              recommendedCourses.add("Database Design & Management (SQL/NoSQL)");
+          }
+          if (keyword.includes("mobile app development") || keyword.includes("mobile dev")) {
+              recommendedCourses.add("Flutter & Dart for Cross-Platform Apps");
+              recommendedCourses.add("Native Android Development (Kotlin/Java)");
+              recommendedCourses.add("Native iOS Development (Swift/Objective-C)");
+          }
+          if (keyword.includes("research") || keyword.includes("analysis")) {
+              recommendedCourses.add("Advanced Research Methodology");
+              recommendedCourses.add("Statistical Data Analysis (SPSS/R)");
+          }
+          if (keyword.includes("writing") || keyword.includes("content")) {
+              recommendedCourses.add("Technical Writing for IT Professionals");
+              recommendedCourses.add("Content Marketing & SEO Writing");
+          }
+          if (keyword.includes("leadership") || keyword.includes("management")) {
+              recommendedCourses.add("Leadership & Team Building Skills");
+              recommendedCourses.add("Strategic Management & Business Planning");
+          }
+          if (keyword.includes("conservation") || keyword.includes("environment") || keyword.includes("ecology")) {
+              recommendedCourses.add("Environmental Impact Assessment");
+              recommendedCourses.add("Wildlife Ecology & Management");
+              recommendedCourses.add("Sustainable Development Practices");
+          }
+          if (keyword.includes("horticulture") || keyword.includes("agriculture") || keyword.includes("plants")) {
+              recommendedCourses.add("Modern Agricultural Techniques");
+              recommendedCourses.add("Organic Farming Certification");
+              recommendedCourses.add("Plant Biotechnology Fundamentals");
+          }
+          if (keyword.includes("animals") || keyword.includes("wildlife") || keyword.includes("zoology")) {
+              recommendedCourses.add("Animal Behavior & Welfare");
+              recommendedCourses.add("Veterinary Assistant Training");
+              recommendedCourses.add("Biodiversity Conservation");
+          }
+      });
+
+
+      // Add courses based on Branch and Major for more specific recommendations
+      if (branch && majors && specificRecommendations[branch] && specificRecommendations[branch][majors]) {
+          specificRecommendations[branch][majors].forEach(course => recommendedCourses.add(course));
+      }
+
+      // Add general recommendations based on branch if no specific major matches or selected
+      if (branch) {
+          if (branch === "IT") {
+              recommendedCourses.add("Software Project Management");
+              recommendedCourses.add("Systems Analysis and Design");
+          } else if (branch === "Management") {
+              recommendedCourses.add("Business Ethics and Corporate Governance");
+              recommendedCourses.add("Supply Chain Management");
+          } else if (branch === "Literature") {
+              recommendedCourses.add("Academic Writing & Research");
+              recommendedCourses.add("Cultural Studies");
+          } else if (branch === "Science") {
+              recommendedCourses.add("Laboratory Safety and Techniques");
+              recommendedCourses.add("Scientific Communication");
+          }
+      }
+
+
+      // Convert Set back to Array for iteration
+      const finalRecommendations = Array.from(recommendedCourses);
+
+      if (finalRecommendations.length > 0) {
+          finalRecommendations.forEach((course) => {
+              output += `<li>${course}</li>`;
+          });
+      } else {
+          output += `<li>No specific recommendations found based on your detailed inputs. Please consider exploring general courses related to your qualification or broad interest areas.</li>`;
+      }
+      output += `</ul>`;
+
+      resultDiv.innerHTML = output;
+      resultDiv.style.display = "block";
+    });
+  </script>
+<script>
+    // Optional: Add a reset button to clear the form and results
+    const resetButton = document.createElement("button");
+    resetButton.textContent = "Reset";
+    resetButton.type = "button";
+    resetButton.style.marginTop = "10px";
+    resetButton.addEventListener("click", function () {
+      form.reset();
+      resultDiv.style.display = "none";
+      resultDiv.innerHTML = "";
+      majorsSelect.innerHTML = '<option value="">Select Major</option>'; // Reset majors dropdown
+      majorsSelect.disabled = true; // Disable majors dropdown on reset
+      skillsInput.value = ''; // Clear skills input on reset
+      skillsInput.placeholder = 'e.g., programming, marketing, finance'; // Reset skills placeholder
+      skillSuggestionsDiv.textContent = 'Suggested: '; // Clear suggestions on reset
+    });
+    form.appendChild(resetButton);
+</script>
+</body>
+</html>
